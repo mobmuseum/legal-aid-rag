@@ -1,3 +1,11 @@
+# Dataset
+Source
+
+# Project artifacts (generated at runtime)
+*.pkl
+evaluation_results.json
+ablation_results.json
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[codz]
