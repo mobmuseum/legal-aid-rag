@@ -1,122 +1,63 @@
-# ⚖️ Legal Aid RAG — Pakistan Inheritance Law Q&A System
+# Legal Inheritance RAG Architecture
 
-A Retrieval-Augmented Generation (RAG) system for answering questions about inheritance and succession law in Pakistan. Built with hybrid search, cross-encoder re-ranking, and LLM-as-a-Judge evaluation.
+This repository contains the source code, offline evaluation scripts, and deployment resources for a specialized Retrieval-Augmented Generation (RAG) pipeline. The architecture is engineered to query complex legal inheritance laws using a Hybrid Retrieval framework, subsequently validating generated responses through an automated LLM-as-a-Judge system.
 
-## 🏗️ Architecture
+## Project Structure
 
-```
-User Query
-    │
-    ├── BM25 Keyword Search ──────┐
-    │                             ├── Reciprocal Rank Fusion (RRF)
-    └── Pinecone Semantic Search ─┘
-                                  │
-                          Cross-Encoder Re-ranking
-                                  │
-                          Top-5 Context Chunks
-                                  │
-                      Mistral-7B-Instruct (HF API)
-                                  │
-                          Generated Answer
-                                  │
-                    ┌─────────────┴─────────────┐
-              Faithfulness              Relevancy
-           (Claim Verification)    (Query Similarity)
-```
+The codebase is logically split into modular stages corresponding to the data ingestion pipeline and final deployment.
 
-## 📁 Project Structure
+- `src/preprocess.py`: Extracts and recursively chunks raw legal documents from PDF formats.
+- `src/embed_upsert.py`: Processes continuous text chunks into dense mathematical vectors locally using Sentence Transformers and upserts them to a remote Pinecone Serverless matrix.
+- `src/retrieval.py`: Houses the mathematical logic for querying. It executes parallel sparse (BM25) and dense (Pinecone) queries, merging their outputs systematically via Reciprocal Rank Fusion (RRF). 
+- `src/generation.py`: Dispatches retrieved context arrays securely to the Hugging Face Inference API for strict logical generation using Qwen models.
+- `src/evaluation.py`: An autonomous testing suite that verifies Faithfulness and Relevancy algorithmically via the unmetered Groq Llama-3.1 API.
+- `app.py`: The interactive graphical user interface built entirely natively within Streamlit.
 
-```
-legal-aid-rag/
-├── Source/                     # Raw legal documents (PDFs + TXT)
-│   ├── 1 - Core statutory laws/
-│   ├── 2 - Islamic fiqh based/
-│   ├── 3 - research paper and legal analysis/
-│   └── 4 - govt and legal repos/
-├── app.py                     # Gradio web interface
-├── config.py                  # Centralized configuration
-├── ingest.py                  # Document ingestion pipeline
-├── retrieval.py               # Hybrid retrieval engine
-├── generator.py               # LLM generation (Mistral-7B)
-├── evaluation.py              # LLM-as-a-Judge evaluation
-├── ablation.py                # Ablation study runner
-├── test_queries.json          # Test query set (15 queries)
-├── requirements.txt           # Python dependencies
-└── README.md                  # This file
-```
+## Setup and Dependencies
 
-## 🚀 Quick Start
+To execute the data injection and compilation stages locally, you must provide explicit environmental variables.
 
-### 1. Install Dependencies
+1. Clone the repository and navigate into the root directory.
+2. Create a `.env` file containing the following access keys:
+   - `HF_TOKEN=your_huggingface_token`
+   - `PINECONE_API_KEY=your_pinecone_key`
+   - `GROQ_API_KEY=your_groq_key`
 
-```bash
-python -m venv .venv
-.venv\Scripts\activate        # Windows
-pip install -r requirements.txt
-```
+3. Install the fundamental Python dependencies:
+   ```bash
+   pip install -r requirements.txt
+   ```
 
-### 2. Configure API Keys
+Note: The `requirements.txt` includes advanced dependencies natively required for both the Streamlit UI and local offline dense embedding (`sentence-transformers`, `pinecone[grpc]`, `rank-bm25`). 
 
-Copy `.env.example` to `.env` and fill in your keys:
+## Execution Sequence
 
-```bash
-copy .env.example .env
-```
+The pipeline must be engaged consecutively to ensure structural integrity across the Vector DB and local sparse matrices before opening the application loop.
 
-- **Pinecone**: https://app.pinecone.io → API Keys
-- **HuggingFace**: https://huggingface.co/settings/tokens → New Token (Read)
+1. **Preprocessing Phase**:
+   Combiles raw input structures.
+   ```bash
+   python3 src/preprocess.py
+   ```
 
-### 3. Run Document Ingestion
+2. **Embedding and Upsert Phase**:
+   Transforms and uploads processed textual boundaries.
+   ```bash
+   python3 src/embed_upsert.py
+   ```
 
-```bash
-python ingest.py recursive
-```
+3. **Application Interface**:
+   Boots the interactive frontend layer locally.
+   ```bash
+   streamlit run app.py
+   ```
 
-This extracts text from all source documents, chunks them, generates embeddings, uploads to Pinecone, and builds the BM25 index.
+## Evaluation and Validation
 
-### 4. Launch the Web App
+The implementation was systematically benchmarked using `src/evaluation.py`. The evaluation isolated varying configurations (fixed vs. recursive chunking, semantic-only vs. hybrid retrieval) verifying their latency properties and synthetic metrics natively. 
 
-```bash
-python app.py
-```
+The evaluation framework automatically aggregates these properties into statistical tables mapping Faithfulness (claims supported by source documents) and Relevancy (cosine stability against generated inverse questions) specifically using the Llama-3.1-8B model natively on Groq processors.
 
-Open http://localhost:7860 in your browser.
+## Deployment Notes
 
-### 5. Run Evaluation
-
-```bash
-python evaluation.py
-```
-
-### 6. Run Ablation Study
-
-```bash
-python ablation.py
-```
-
-## 📊 Evaluation Metrics
-
-| Metric | Description |
-|--------|------------|
-| **Faithfulness** | % of claims in the answer supported by retrieved context |
-| **Relevancy** | Cosine similarity between generated questions and original query |
-
-## 🔧 Technical Stack
-
-| Component | Technology |
-|-----------|-----------|
-| Embeddings | `all-MiniLM-L6-v2` (384-dim) |
-| Vector DB | Pinecone (Serverless) |
-| Keyword Search | BM25 (rank-bm25) |
-| Re-ranking | `cross-encoder/ms-marco-MiniLM-L-6-v2` |
-| LLM | Mistral-7B-Instruct v0.3 (HF Inference API) |
-| Web UI | Gradio |
-| Hosting | HuggingFace Spaces |
-
-## 📚 Corpus
-
-27 documents covering Pakistan's inheritance law:
-- Core statutory laws (Succession Act 1925, Family Laws Ordinance)
-- Islamic jurisprudence (Hanafi, Shia schools, Quranic verses)
-- Research papers on MFLO Section 4, orphaned grandchildren rights
-- Government legislation (Marriage Acts, Property Rights Acts, Family Courts)
+The resultant interface is designed to migrate beyond local boundaries and is actively configured sequentially for Hugging Face Spaces. Using the provided `Dockerfile`, the Streamlit application containerizes efficiently, circumventing rigid SDK requirements. The interface automatically pulls variables continuously, operating directly under the mapped 7860 network port.

@@ -1,5 +1,8 @@
 # Dataset
 Source
+corpus
+output
+docs
 
 # Project artifacts (generated at runtime)
 *.pkl
@@ -213,3 +216,10 @@ cython_debug/
 marimo/_static/
 marimo/_lsp/
 __marimo__/
+
+# TeX
+*.aux
+*.out
+*.pyg
+*.log
+IEEEtran.cls
