@@ -20,7 +20,7 @@ Outputs:
 
 Usage:
   pip install requests sentence-transformers numpy
-  python step5_evaluation.py
+  python evaluation.py
 """
 
 import os
@@ -670,7 +670,7 @@ def main():
     # Save everything
     save_results(main_results, ablation)
 
-    print("\nDone! Next step: build the Streamlit app (step6_app.py)")
+    print("\nDone!")
     print("=" * 55)
 
 

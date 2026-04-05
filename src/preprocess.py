@@ -9,7 +9,7 @@ Outputs:
 
 Usage:
   pip install pypdf langchain-text-splitters tiktoken
-  python step1_preprocess.py
+  python preprocess.py
 """
 
 import os
@@ -19,7 +19,6 @@ import hashlib
 from pathlib import Path
 from typing import List, Dict
 
-# ── pip install pypdf langchain-text-splitters tiktoken ──
 from pypdf import PdfReader
 from langchain_text_splitters import (
     RecursiveCharacterTextSplitter,
@@ -283,7 +282,7 @@ def main():
     # (you'll compare both strategies in your ablation study later)
     save_bm25_corpus(recursive_chunks, "bm25_corpus.json")
 
-    print("\nDone! Next step: run step2_embed_upsert.py")
+    print("\nDone!")
     print("=" * 55)
 
 

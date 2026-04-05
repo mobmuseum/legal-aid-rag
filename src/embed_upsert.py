@@ -8,7 +8,7 @@ Run ONCE offline — do not re-embed on every query.
 
 Usage:
   pip install sentence-transformers pinecone tqdm
-  python step2_embed_upsert.py
+  python embed_upsert.py
 
 Environment variables required (set these before running):
   PINECONE_API_KEY   — from https://app.pinecone.io → API Keys
@@ -142,10 +142,6 @@ def build_pinecone_vectors(chunks: List[Dict], embeddings: List[List[float]]) ->
       - source   : original filename
       - strategy : chunking strategy used
       - chunk_index
-    
-    NOTE: Pinecone free tier has a 40KB metadata limit per vector.
-    If a chunk text is very long, it gets truncated in metadata —
-    the full text is still in your local chunks_recursive.json.
     """
     vectors = []
     for chunk, embedding in zip(chunks, embeddings):
@@ -292,7 +288,7 @@ def main():
     # 5. Quick sanity check
     sanity_check(index, EMBEDDING_MODEL)
 
-    print("Done! Next step: run step3_retrieval.py")
+    print("Done!")
     print("=" * 55)
 
 

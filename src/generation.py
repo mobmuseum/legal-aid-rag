@@ -11,10 +11,10 @@ Also handles:
 
 Usage (standalone test):
   pip install requests
-  python step4_generation.py
+  python generation.py
 
 Import in your app:
-  from step4_generation import generate_answer
+  from generation import generate_answer
 """
 
 import os
@@ -295,7 +295,7 @@ def main():
         print(f"\nAnswer:\n{result['answer']}")
 
     print("\n" + "=" * 55)
-    print("Done! Next step: run step5_evaluation.py")
+    print("Done!")
 
 
 if __name__ == "__main__":

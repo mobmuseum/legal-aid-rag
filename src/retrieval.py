@@ -13,10 +13,10 @@ Pipeline per query:
 Usage (standalone test):
   pip install rank-bm25 sentence-transformers pinecone \
               crossencoder nltk tqdm
-  python step3_retrieval.py
+  python retrieval.py
 
 Import in your app:
-  from step3_retrieval import build_retriever, retrieve
+  from retrieval import build_retriever, retrieve
 """
 
 import os

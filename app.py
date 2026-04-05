@@ -42,7 +42,33 @@ st.markdown("""
     --rust:      #8b3a1a;
     --sage:      #4a6741;
     --cream:     #faf7f0;
-    --border:    #d9cdb8;
+    --bg-card:   #ffffff;
+    --sidebar-bg: #1a1208;
+    --sidebar-text: #faf7f0;
+    --btn-bg:    #1a1208;
+    --btn-text:  #faf7f0;
+    --header-bg: #1a1208;
+    --header-text: #f5f0e8;
+}
+
+@media (prefers-color-scheme: dark) {
+    :root {
+        --ink:       #faf7f0;
+        --parchment: #1a1208;
+        --gold:      #d4a843;
+        --gold-lt:   #b8860b;
+        --rust:      #e87851;
+        --sage:      #69965d;
+        --cream:     #0f0a05;
+        --border:    #3e3223;
+        --bg-card:   #1d150c;
+        --sidebar-bg: #090603;
+        --sidebar-text: #faf7f0;
+        --btn-bg:    #3e3223;
+        --btn-text:  #faf7f0;
+        --header-bg: #0e1117;
+        --header-text: #faf7f0;
+    }
 }
 
 /* ── Global ── */
@@ -53,13 +79,13 @@ html, body, [class*="css"] {
 }
 
 /* ── Hide default Streamlit chrome ── */
-#MainMenu, footer, header { visibility: hidden; }
+#MainMenu, footer { visibility: hidden; }
 .block-container { padding: 2rem 3rem 4rem; max-width: 1200px; }
 
 /* ── Header banner ── */
 .miras-header {
-    background: var(--ink);
-    color: var(--parchment);
+    background: var(--header-bg);
+    color: var(--header-text);
     padding: 2.2rem 3rem 1.8rem;
     border-radius: 4px;
     margin-bottom: 2rem;
@@ -83,7 +109,7 @@ html, body, [class*="css"] {
     font-size: 2.6rem;
     font-weight: 700;
     letter-spacing: -0.5px;
-    color: var(--parchment);
+    color: var(--header-text);
     margin: 0 0 0.3rem;
 }
 .miras-header .tagline {
@@ -100,7 +126,7 @@ html, body, [class*="css"] {
     font-size: 1rem !important;
     border: 1.5px solid var(--border) !important;
     border-radius: 4px !important;
-    background: white !important;
+    background: var(--bg-card) !important;
     color: var(--ink) !important;
     padding: 1rem !important;
     resize: vertical;
@@ -112,8 +138,8 @@ html, body, [class*="css"] {
 
 /* ── Primary button ── */
 .stButton > button {
-    background: var(--ink) !important;
-    color: var(--parchment) !important;
+    background: var(--btn-bg) !important;
+    color: var(--btn-text) !important;
     font-family: 'DM Sans', sans-serif !important;
     font-size: 0.9rem !important;
     font-weight: 500 !important;
@@ -130,7 +156,7 @@ html, body, [class*="css"] {
 
 /* ── Answer card ── */
 .answer-card {
-    background: white !important;
+    background: var(--bg-card) !important;
     color: var(--ink) !important;
     border: 1.5px solid var(--border);
     border-left: 4px solid var(--gold);
@@ -165,7 +191,8 @@ html, body, [class*="css"] {
     font-size: 0.7rem;
     letter-spacing: 0.1em;
     text-transform: uppercase;
-    color: #888;
+    color: var(--ink);
+    opacity: 0.7;
     font-weight: 500;
     margin-bottom: 0.3rem;
 }
@@ -203,10 +230,10 @@ html, body, [class*="css"] {
 
 /* ── Sidebar ── */
 section[data-testid="stSidebar"] {
-    background: var(--ink) !important;
+    background: var(--sidebar-bg) !important;
 }
 section[data-testid="stSidebar"] * {
-    color: var(--parchment) !important;
+    color: var(--sidebar-text) !important;
 }
 section[data-testid="stSidebar"] .stSelectbox label,
 section[data-testid="stSidebar"] .stSlider label {
@@ -230,9 +257,10 @@ section[data-testid="stSidebar"] .stSlider label {
 /* ── Disclaimer ── */
 .disclaimer {
     font-size: 0.78rem;
-    color: #999;
-    background: #fafafa;
-    border: 1px solid #eee;
+    color: var(--ink);
+    opacity: 0.8;
+    background: var(--bg-card);
+    border: 1px solid var(--border);
     border-radius: 3px;
     padding: 0.7rem 1rem;
     margin-top: 2rem;
@@ -245,11 +273,12 @@ section[data-testid="stSidebar"] .stSlider label {
     gap: 0.6rem;
     flex-wrap: wrap;
     font-size: 0.78rem;
-    color: #888;
+    color: var(--ink);
+    opacity: 0.8;
     margin-top: 0.8rem;
 }
 .latency-chip {
-    background: #f0ede6;
+    background: var(--border);
     border-radius: 2px;
     padding: 0.2rem 0.6rem;
 }
@@ -279,6 +308,8 @@ def load_similarity_model():
 # ─────────────────────────────────────────────
 # HEADER
 # ─────────────────────────────────────────────
+
+st.info("🌙 **Visual Experience Note:** We highly recommend switching your Streamlit Theme to **Dark Mode** for the optimal viewing experience! (Upper Right Menu ⋮ → Settings → Theme).")
 
 st.markdown("""
 <div class="miras-header">
@@ -329,8 +360,8 @@ with st.sidebar:
 
     st.markdown("---")
     st.markdown(
-        "<div style='font-size:0.72rem;color:#888;line-height:1.6'>"
-        "Powered by Mistral-7B · Pinecone · HuggingFace"
+        "<div style='font-size:0.72rem;color:var(--ink);opacity:0.6;line-height:1.6'>"
+        # "Powered by Mistral-7B · Pinecone · HuggingFace"
         "</div>",
         unsafe_allow_html=True,
     )
@@ -353,7 +384,7 @@ with col_btn:
     search_clicked = st.button("Ask Miras →", use_container_width=True)
 with col_mode:
     st.markdown(
-        f"<div style='padding:0.6rem 0;font-size:0.82rem;color:#888'>"
+        f"<div style='padding:0.6rem 0;font-size:0.82rem;color:var(--ink);opacity:0.8;'>"
         f"Mode: <strong>{retrieval_mode}</strong> · Top-{top_k} chunks"
         f"</div>",
         unsafe_allow_html=True,
@@ -520,9 +551,9 @@ elif search_clicked and not query.strip():
 
 if not search_clicked:
     st.markdown("""
-    <div style="text-align:center;padding:3rem 0 2rem;color:#aaa">
+    <div style="text-align:center;padding:3rem 0 2rem;color:var(--ink);opacity:0.6;">
         <div style="font-size:3rem;margin-bottom:1rem">⚖️</div>
-        <div style="font-family:'Playfair Display',serif;font-size:1.2rem;color:#888;margin-bottom:0.5rem">
+        <div style="font-family:'Playfair Display',serif;font-size:1.2rem;color:var(--ink);opacity:0.8;margin-bottom:0.5rem">
             Ask a question about inheritance law
         </div>
         <div style="font-size:0.85rem">
